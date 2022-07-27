@@ -40,7 +40,7 @@ public class BoardService {
 	 * 등록/수정 처리.
 	 * @param board
 	 */
-	public int save(Board parameter) {
+	public void save(Board parameter) {
 		//조회하여 리턴된 정보 
 		Board board = repository.get(parameter.getBoardSeq());
 		if (board == null) {
@@ -48,14 +48,14 @@ public class BoardService {
 		} else {
 			repository.update(parameter);
 		}
-		return board.getBoardSeq();
 	}
 
 	/**
 	 * 삭제 처리.
 	 * @param boardSeq
 	 */
-	public void delete(int boardSeq) {
+	public boolean delete(int boardSeq) {
 		repository.delete(boardSeq);
+		return true;
 	}
 }
