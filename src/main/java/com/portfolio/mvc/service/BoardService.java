@@ -1,6 +1,8 @@
 package com.portfolio.mvc.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,6 +28,26 @@ public class BoardService {
 	 */
 	public List<Board> getList() {
 		return repository.getList();
+	}
+	
+	/**
+	 * 단순 반복문을 이용한 등록 처리.100개 이하에서 권장 
+	 */
+	public void saveList1(List<BoardParameter> list) {
+		//1개가 생성될때마다 레파지토리 호출 =connection매번 호출 
+		for (BoardParameter parameter : list) {
+			repository.save(parameter);
+		}
+	}
+	
+	/**
+	 * 100씩 배열에 담아서 일괄 등록 처리.
+	 */
+	public void saveList2(List<BoardParameter> boardList) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		//map에 리스트(1만건) 한번에 담아서 총 connection 1번 호출 
+		paramMap.put("boardList", boardList);
+		repository.saveList(paramMap);
 	}
 	
 	/**

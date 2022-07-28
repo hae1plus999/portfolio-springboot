@@ -1,6 +1,7 @@
 package com.portfolio.mvc.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +21,8 @@ public interface IBoardRepository {
 	Board get(int boardSeq);
 	//저장 
 	int save(BoardParameter board);
+	//테스트용 저장 
+	void saveList(Map<String, Object> paramMap);
 	//수정 
 	void update(BoardParameter board);
 	//삭제 
