@@ -13,6 +13,7 @@ import lombok.Data;
 public class Board {
 
 	private int boardSeq;
+	private BoardType boardType; //Enum
 	private String title;
 	private String contents;
 	private Data reqDate;

@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.portfolio.configuration.exception.BaseException;
 import com.portfolio.configuration.http.BaseResponse;
 import com.portfolio.configuration.http.BaseResponseCode;
 import com.portfolio.mvc.domain.Board;
 import com.portfolio.mvc.parameter.BoardParameter;
+import com.portfolio.mvc.parameter.BoardSearchParameter;
 import com.portfolio.mvc.repository.IBoardRepository;
 import com.portfolio.mvc.service.BoardService;
 
@@ -46,10 +48,11 @@ public class BoardController {
 	 * 목록 리턴 
 	 * @return
 	 */
+	//@Apiparam은 Swagger에서 제공하는 어노테이션, 파라메터에 대한 주석(설명)이나 옵션을 설정
 	@GetMapping
 	@ApiOperation(value = "목록 조회",notes = "게시물 목록 정보를 조회할 수 있습니다.")
-	public BaseResponse<List<Board>> getList() {
-		return new BaseResponse<List<Board>>(boardService.getList());
+	public BaseResponse<List<Board>> getList(@ApiParam BoardSearchParameter parameter) {
+		return new BaseResponse<List<Board>>(boardService.getList(parameter));
 	}
 	
 	/**
@@ -79,6 +82,7 @@ public class BoardController {
 	@ApiOperation(value = "등록/수정 처리", notes = "신규 게시물 저장 및 기존 게시물 업데이트가 가능합니다.")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
+		@ApiImplicitParam(name = "boardType", value = "게시판 종류", example = "NOTICE"),
 		@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
 		@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌")
 	})
