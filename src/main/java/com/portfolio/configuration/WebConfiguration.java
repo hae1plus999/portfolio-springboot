@@ -54,6 +54,11 @@ public class WebConfiguration implements WebMvcConfigurer {
 		jsonView.setObjectMapper(objectMapper());
 		return jsonView;
 	}
+	
+	@Bean
+	public GlobalConfig config() {
+		return new GlobalConfig();
+	}
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
@@ -65,4 +70,6 @@ public class WebConfiguration implements WebMvcConfigurer {
 		// 페이지 리졸버 등록
 		resolvers.add(new MySQLPageRequestHandleMethodArgumentResolver());
 	}
+	
+	
 }
