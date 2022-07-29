@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portfolio.configuration.exception.BaseException;
+import com.portfolio.configuration.framework.web.bind.annotation.RequestConfig;
 import com.portfolio.configuration.http.BaseResponse;
 import com.portfolio.configuration.http.BaseResponseCode;
+import com.portfolio.framework.data.domain.MySQLPageRequest;
+import com.portfolio.framework.data.domain.PageRequestParameter;
 import com.portfolio.mvc.domain.Board;
 import com.portfolio.mvc.parameter.BoardParameter;
 import com.portfolio.mvc.parameter.BoardSearchParameter;
@@ -51,8 +54,13 @@ public class BoardController {
 	//@Apiparam은 Swagger에서 제공하는 어노테이션, 파라메터에 대한 주석(설명)이나 옵션을 설정
 	@GetMapping
 	@ApiOperation(value = "목록 조회",notes = "게시물 목록 정보를 조회할 수 있습니다.")
-	public BaseResponse<List<Board>> getList(@ApiParam BoardSearchParameter parameter) {
-		return new BaseResponse<List<Board>>(boardService.getList(parameter));
+	public BaseResponse<List<Board>> getList(
+			@ApiParam BoardSearchParameter parameter,
+			@ApiParam MySQLPageRequest pageRequest) {
+		
+		logger.info("pageRequest : {}", pageRequest);
+		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
+		return new BaseResponse<List<Board>>(boardService.getList(pageRequestParameter));
 	}
 	
 	/**
@@ -79,6 +87,7 @@ public class BoardController {
 	 * @param board
 	 */
 	@PutMapping
+	@RequestConfig
 	@ApiOperation(value = "등록/수정 처리", notes = "신규 게시물 저장 및 기존 게시물 업데이트가 가능합니다.")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
@@ -156,6 +165,7 @@ public class BoardController {
 	 * @param boardSeq
 	 */
 	@DeleteMapping("/{boardSeq}")
+	@RequestConfig
 	@ApiOperation(value = "삭제 처리", notes = "게시물 번호에 해당하는 정보를 삭제합니다.")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1")

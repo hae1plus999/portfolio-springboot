@@ -5,8 +5,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import com.portfolio.configuration.exception.BaseException;
+import com.portfolio.configuration.framework.web.bind.annotation.RequestConfig;
+import com.portfolio.configuration.http.BaseResponseCode;
 
 public class BaseHandlerInterceptor extends HandlerInterceptorAdapter{
 	
@@ -17,6 +22,18 @@ public class BaseHandlerInterceptor extends HandlerInterceptorAdapter{
 			throws Exception {
 		
 		logger.info("preHandle requestURL : {}", request.getRequestURI());
+		
+		if(handler instanceof HandlerMethod) {
+			HandlerMethod handlerMethod = (HandlerMethod) handler;
+			logger.info("handlerMethod : {}", handlerMethod);
+			RequestConfig requestConfig = handlerMethod.getMethodAnnotation(RequestConfig.class);
+			if(requestConfig != null) {
+				//로그인 체크가 필수인 경우(현재는 토큰,세션정보가 없으므로) 에러메세지를 리턴
+				if(requestConfig.loginCheck()) {
+					throw new BaseException(BaseResponseCode.LOGIN_REQUIRED);
+				}
+			}
+		}
 		return true;
 	}
 	

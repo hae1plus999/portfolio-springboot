@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import com.portfolio.framework.data.domain.PageRequestParameter;
 import com.portfolio.mvc.domain.Board;
 import com.portfolio.mvc.parameter.BoardParameter;
 import com.portfolio.mvc.parameter.BoardSearchParameter;
@@ -27,8 +28,8 @@ public class BoardService {
 	 * 목록 리턴 
 	 * @return
 	 */
-	public List<Board> getList(BoardSearchParameter parameter) {
-		return repository.getList(parameter);
+	public List<Board> getList(PageRequestParameter<BoardSearchParameter> pageRequestParameter) {
+		return repository.getList(pageRequestParameter);
 	}
 	
 	/**

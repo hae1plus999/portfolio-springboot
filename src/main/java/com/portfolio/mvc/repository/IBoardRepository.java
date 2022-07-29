@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.portfolio.framework.data.domain.PageRequestParameter;
 import com.portfolio.mvc.domain.Board;
 import com.portfolio.mvc.parameter.BoardParameter;
 import com.portfolio.mvc.parameter.BoardSearchParameter;
@@ -17,7 +18,7 @@ import com.portfolio.mvc.parameter.BoardSearchParameter;
 @Repository
 public interface IBoardRepository {
 
-	List<Board> getList(BoardSearchParameter parameter);
+	List<Board> getList(PageRequestParameter<BoardSearchParameter> pageRequestParameter);
 	//조회 
 	Board get(int boardSeq);
 	//저장 
