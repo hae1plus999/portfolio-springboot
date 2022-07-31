@@ -3,13 +3,18 @@
 
 <mapper namespace="com.portfolio.mvc.repository.IBoardRepository">
 
-	<select id="getList" parameterType="com.portfolio.framework.data.domain.PageRequestParameter" resultType="com.portfolio.mvc.domain.Board">
+	<resultMap type="com.portfolio.mvc.domain.Board" id="getListResultMap">
+		<result column="DEL_YN" property="delYn" typeHandler="com.portfolio.configuration.mybatis.typehandler.StringValueBooleanTypeHandler"/>
+	</resultMap>
+
+	<select id="getList" parameterType="com.portfolio.framework.data.domain.PageRequestParameter" resultMap="getListResultMap">
 		SELECT
 			B.BOARD_SEQ,
 			B.BOARD_TYPE,
 			B.TITLE,
 			B.CONTENTS,
-			B.REG_DATE
+			B.REG_DATE,
+			B.DEL_YN
 		FROM T_BOARD B
 		<where>
 			<!-- 키워드 검색 @isNotEmpty() null체크, 배열길이체크-->
@@ -35,7 +40,8 @@
 			B.BOARD_TYPE,
 			B.TITLE,
 			B.CONTENTS,
-			B.REG_DATE
+			B.REG_DATE,
+			B.DEL_YN
 		FROM T_BOARD B
 		WHERE B.BOARD_SEQ = #{boardSeq}
 	</select>
@@ -46,14 +52,16 @@
 			BOARD_TYPE,
 			TITLE,
 			CONTENTS,
-			REG_DATE
+			REG_DATE,
+			DEL_YN
 		)
 		VALUES
 		(
 			#{boardType.code},
 			#{title},
 			#{contents},
-			NOW()
+			NOW(),
+			#{delYn, typeHandler = com.portfolio.configuration.mybatis.typehandler.StringValueBooleanTypeHandler}
 		)
 	</insert>
 	
@@ -79,7 +87,8 @@
 		SET
 			BOARD_TYPE = #{boardType.code},
 			TITLE = #{title},
-			CONTENTS = #{contents}
+			CONTENTS = #{contents},
+			DEL_YN = #{delYn, typeHandler = com.portfolio.configuration.mybatis.typehandler.StringValueBooleanTypeHandler}
 		WHERE BOARD_SEQ = #{boardSeq}
 	</update>
 	

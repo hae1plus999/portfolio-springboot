@@ -16,5 +16,6 @@ public class Board {
 	private BoardType boardType; //Enum
 	private String title;
 	private String contents;
-	private Data reqDate;
+	private Date reqDate;
+	private boolean delYn;
 }
