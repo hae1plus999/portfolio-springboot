@@ -2,6 +2,7 @@ package com.portfolio.mvc.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;
 
@@ -19,6 +20,8 @@ import com.portfolio.configuration.GlobalConfig;
 import com.portfolio.configuration.exception.BaseException;
 import com.portfolio.configuration.http.BaseResponse;
 import com.portfolio.configuration.http.BaseResponseCode;
+import com.portfolio.mvc.parameter.UploadFileParameter;
+import com.portfolio.mvc.service.UploadFileService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +35,9 @@ public class FileController {
 	
 	@Autowired
 	private GlobalConfig config;
+	
+	@Autowired
+	private UploadFileService uploadFileService;
 	
 	/**
 	 * 업로드 리턴
@@ -47,15 +53,21 @@ public class FileController {
 		}
 		String uploadFilePath = config.getUploadFilePath();
 		logger.debug("uploadFilePath : {}", uploadFilePath);
+		
 		if(config.isProd()) {
 			logger.debug("isProd calendar : {}", Calendar.getInstance());
 		}
 		//파일 저장
+		//날짜폴더를 추가
+		String currentDate = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime());
+		uploadFilePath = config.getUploadFilePath() + currentDate + "/";
+		logger.info("uploadFilePath : {}", uploadFilePath);
 		//확장자
 		String prefix = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf(".") + 1, multipartFile.getOriginalFilename().length());
 		//저장될 파일명 + 확장자
 		String filename = UUID.randomUUID().toString() + "." + prefix;
-		//파일 폴더 만들어주기
+		logger.info("filename : {}", filename);
+		//파일 폴더 만들어주기 없다면 생성
 		File folder = new File(uploadFilePath);
 		if(!folder.isDirectory()) {
 			folder.mkdirs();
@@ -64,9 +76,26 @@ public class FileController {
 		String pathname = uploadFilePath + filename;
 		//파일이 저장될 경로를 지정
 		File dest = new File(pathname);
-		
+		String resourcePathname = config.getUploadResourcePath() + currentDate + "/" + filename;
+		logger.info("dest : {}", dest);
 		try {
 			multipartFile.transferTo(dest);
+			//파일업로드 된 후 DB에 저장
+			UploadFileParameter parameter = new UploadFileParameter();
+			//컨텐츠 종류 
+			parameter.setContentType(multipartFile.getContentType());
+			//원본파일명 
+			parameter.setOriginalFilename(multipartFile.getOriginalFilename());
+			//저장파일명 
+			parameter.setFilename(filename);
+			//실제파일 저장경로 
+			parameter.setPathname(pathname);
+			//파일크기 
+			parameter.setSize((int) multipartFile.getSize());
+			//static resource 접근 경로
+			parameter.setResourcePathname(resourcePathname);
+			uploadFileService.save(parameter);
+			
 		} catch (IllegalStateException | IOException e) {
 			logger.error("e", e);
 		} 
