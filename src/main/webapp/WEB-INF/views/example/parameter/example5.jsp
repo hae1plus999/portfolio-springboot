@@ -7,7 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h2>id : ${id}</h2>
-	<h2>code : </h2>
+	<h2>ids : ${ids}</h2>
 </body>
 </html>
