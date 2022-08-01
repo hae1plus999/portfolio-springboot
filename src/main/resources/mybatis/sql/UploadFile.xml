@@ -3,19 +3,6 @@
 
 <mapper namespace="com.portfolio.mvc.repository.IUploadFileRepository">
 
-	<select id="get" parameterType="int" resultType="com.portfolio.mvc.domain.UploadFile">
-		SELECT
-			PATHNAME,
-			FILENAME,
-			ORIGINAL_FILENAME,
-			SIZE,
-			CONTENT_TYPE,
-			RESOURCE_PATHNAME,
-			REG_DATE
-		FROM T_UPLOAD_FILE UF
-		WHERE UF.UPLOAD_FILE_SEQ = #{uploadFileSeq}
-	</select>
-	
 	<insert id="save" parameterType="com.portfolio.mvc.parameter.UploadFileParameter">
 		INSERT INTO T_UPLOAD_FILE
 		(
