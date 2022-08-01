@@ -2,6 +2,7 @@ package com.portfolio.mvc.repository;
 
 import org.springframework.stereotype.Repository;
 
+import com.portfolio.mvc.domain.UploadFile;
 import com.portfolio.mvc.parameter.UploadFileParameter;
 
 /**
@@ -13,4 +14,6 @@ import com.portfolio.mvc.parameter.UploadFileParameter;
 public interface IUploadFileRepository {
 
 	void save(UploadFileParameter parameter);
+
+	UploadFile get(int uploadFileSeq);
 }
