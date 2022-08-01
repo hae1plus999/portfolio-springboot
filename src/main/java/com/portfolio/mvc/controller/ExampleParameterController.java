@@ -1,5 +1,6 @@
 package com.portfolio.mvc.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -8,8 +9,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping("/example/parameter")
@@ -68,10 +72,50 @@ public class ExampleParameterController {
 	 * @param paramMap
 	 * @param model
 	 */
-	@GetMapping("/example5/")
+	@GetMapping("/example5")
 	public String example5(@RequestParam String[] ids, Model model) {
 		model.addAttribute("ids", ids);
 		return "/example/parameter/example5";
+		
+	}
+	
+	/**
+	 * json 받는방법
+	 * @param paramMap
+	 * @param model
+	 */
+	@GetMapping("/example6/form")
+	public void form() {
+		
+	}
+	
+	/**
+	 * json 받는방법 Map
+	 * @param paramMap
+	 * @param model
+	 */
+//	@PostMapping("/example6/saveData")
+//	@ResponseBody
+//	public Map<String, Object> example6(@RequestBody Map<String, Object> requestBody) {
+//		Map<String, Object> resultMap = new HashMap<String, Object> ();
+//		resultMap.put("result", true);
+//		logger.info("requestBody : {}", requestBody);
+//		return resultMap;
+//		
+//	}
+	
+	/**
+	 * json 받는방법 class
+	 * @param paramMap
+	 * @param model
+	 */
+	@PostMapping("/example6/saveData")
+	@ResponseBody
+	public Map<String, Object> example6(@RequestBody ExampleRequestBodyUser requestBody) {
+		Map<String, Object> resultMap = new HashMap<String, Object> ();
+		resultMap.put("result", true);
+		logger.info("requestBody : {}", requestBody);
+		return resultMap;
 		
 	}
 }
