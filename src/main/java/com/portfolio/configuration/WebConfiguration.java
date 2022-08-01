@@ -33,7 +33,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 	@Bean
 	public ReloadableResourceBundleMessageSource messageSource() {
 		ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
-		source.setBasename("classpath:/messages/message");
+		source.setBasename("classpath:/messages/message_com.properties");
 		source.setDefaultEncoding("UTF-8");
 		source.setCacheSeconds(60);
 		source.setDefaultLocale(Locale.KOREAN);

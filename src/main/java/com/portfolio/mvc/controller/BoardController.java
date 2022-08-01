@@ -7,12 +7,16 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portfolio.configuration.exception.BaseException;
@@ -37,7 +41,7 @@ import io.swagger.annotations.ApiParam;
  * 게시판 컨트롤러.
  * @author haewon
  */
-@RestController
+@Controller
 @RequestMapping("/board")
 @Api(tags = "게시판 API")
 public class BoardController {
@@ -53,6 +57,7 @@ public class BoardController {
 	 */
 	//@Apiparam은 Swagger에서 제공하는 어노테이션, 파라메터에 대한 주석(설명)이나 옵션을 설정
 	@GetMapping
+	@ResponseBody
 	@ApiOperation(value = "목록 조회",notes = "게시물 목록 정보를 조회할 수 있습니다.")
 	public BaseResponse<List<Board>> getList(
 			@ApiParam BoardSearchParameter parameter,
@@ -69,6 +74,7 @@ public class BoardController {
 	 * @return
 	 */
 	@GetMapping("/{boardSeq}")
+	@ResponseBody
 	@ApiOperation(value = "상세 조회", notes = "게시물 번호에 해당하는 상세 정보를 조회할 수 있습니다.")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1")
@@ -83,11 +89,28 @@ public class BoardController {
 	}
 	
 	/**
+	 * 등록/수정 화면
+	 * @param parameter
+	 * @param model
+	 */
+	@GetMapping("/form")
+	@RequestConfig(loginCheck = false)
+	public void form(BoardParameter parameter, Model model) {
+		if(parameter.getBoardSeq() > 0) {
+			Board board = boardService.get(parameter.getBoardSeq());
+			model.addAttribute("board", board);
+
+		}
+		model.addAttribute("parameter", parameter);
+	}
+	
+	/**
 	 * 등록/수정 처리.
 	 * @param board
 	 */
-	@PutMapping
+	@PostMapping("/save")
 	@RequestConfig(loginCheck = false)
+	@ResponseBody
 	@ApiOperation(value = "등록/수정 처리", notes = "신규 게시물 저장 및 기존 게시물 업데이트가 가능합니다.")
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1"),
