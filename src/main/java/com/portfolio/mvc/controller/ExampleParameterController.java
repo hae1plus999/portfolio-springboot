@@ -71,7 +71,7 @@ public class ExampleParameterController {
 	@GetMapping("/example5/")
 	public String example5(@RequestParam String[] ids, Model model) {
 		model.addAttribute("ids", ids);
-		return "/example/parameter/example4";
+		return "/example/parameter/example5";
 		
 	}
 }
