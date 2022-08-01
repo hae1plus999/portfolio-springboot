@@ -56,17 +56,27 @@ public class BoardController {
 	 * @return
 	 */
 	//@Apiparam은 Swagger에서 제공하는 어노테이션, 파라메터에 대한 주석(설명)이나 옵션을 설정
-	@GetMapping
-	@ResponseBody
-	@ApiOperation(value = "목록 조회",notes = "게시물 목록 정보를 조회할 수 있습니다.")
-	public BaseResponse<List<Board>> getList(
-			@ApiParam BoardSearchParameter parameter,
-			@ApiParam MySQLPageRequest pageRequest) {
-		
+	@GetMapping("/list")
+	public void list(BoardSearchParameter parameter, MySQLPageRequest pageRequest, Model model) {
+
 		logger.info("pageRequest : {}", pageRequest);
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
-		return new BaseResponse<List<Board>>(boardService.getList(pageRequestParameter));
+		List<Board> boardList = boardService.getList(pageRequestParameter);
+		model.addAttribute("boardList", boardList);
 	}
+	
+	//@Apiparam은 Swagger에서 제공하는 어노테이션, 파라메터에 대한 주석(설명)이나 옵션을 설정
+//	@GetMapping
+//	@ResponseBody
+//	@ApiOperation(value = "목록 조회",notes = "게시물 목록 정보를 조회할 수 있습니다.")
+//	public BaseResponse<List<Board>> getList(
+//			@ApiParam BoardSearchParameter parameter,
+//			@ApiParam MySQLPageRequest pageRequest) {
+//		
+//		logger.info("pageRequest : {}", pageRequest);
+//		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
+//		return new BaseResponse<List<Board>>(boardService.getList(pageRequestParameter));
+//	}
 	
 	/**
 	 * 상세 정보 리턴. 
