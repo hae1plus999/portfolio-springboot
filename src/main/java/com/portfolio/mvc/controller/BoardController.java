@@ -26,6 +26,7 @@ import com.portfolio.configuration.http.BaseResponseCode;
 import com.portfolio.framework.data.domain.MySQLPageRequest;
 import com.portfolio.framework.data.domain.PageRequestParameter;
 import com.portfolio.mvc.domain.Board;
+import com.portfolio.mvc.domain.MenuType;
 import com.portfolio.mvc.parameter.BoardParameter;
 import com.portfolio.mvc.parameter.BoardSearchParameter;
 import com.portfolio.mvc.repository.IBoardRepository;
@@ -42,7 +43,7 @@ import io.swagger.annotations.ApiParam;
  * @author haewon
  */
 @Controller
-@RequestMapping("/board")
+//@RequestMapping("/board")
 @Api(tags = "게시판 API")
 public class BoardController {
 	
@@ -56,13 +57,15 @@ public class BoardController {
 	 * @return
 	 */
 	//@Apiparam은 Swagger에서 제공하는 어노테이션, 파라메터에 대한 주석(설명)이나 옵션을 설정
-	@GetMapping("/list")
-	public void list(BoardSearchParameter parameter, MySQLPageRequest pageRequest, Model model) {
+	@GetMapping("{menuType}")
+	public String list(@PathVariable MenuType menuType, BoardSearchParameter parameter, MySQLPageRequest pageRequest, Model model) {
 
 		logger.info("pageRequest : {}", pageRequest);
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
 		List<Board> boardList = boardService.getList(pageRequestParameter);
 		model.addAttribute("boardList", boardList);
+		
+		return "/board/list";
 	}
 	
 	//@Apiparam은 Swagger에서 제공하는 어노테이션, 파라메터에 대한 주석(설명)이나 옵션을 설정
@@ -83,7 +86,7 @@ public class BoardController {
 	 * @param boardSeq
 	 * @return
 	 */
-	@GetMapping("/{boardSeq}")
+	@GetMapping("/detail/{boardSeq}")
 	public String detail(@PathVariable int boardSeq, Model model) {
 		Board board = boardService.get(boardSeq);
 		//null 처리
