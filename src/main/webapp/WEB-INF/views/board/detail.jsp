@@ -28,8 +28,8 @@
 			</div>
 		</div>
 		<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-			<a href="/board/list" class="btn btn-primary me-md-2" type="button">목록</a>
-			<a href="/board/edit/${board.boardSeq}" class="btn btn-primary" type="button">수정</a>
+			<a href="/${menuType}" class="btn btn-primary me-md-2" type="button">목록</a>
+			<a href="/${menuType}/edit/${board.boardSeq}" class="btn btn-primary" type="button">수정</a>
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
@@ -39,7 +39,7 @@
 		var $form = $('#form');
 		$form.bind('submit', function() {
 			$.ajax({
-				url: '/board/save',
+				url: '/${menuType}/save',
 				type: 'post',
 				data: $form.serialize(),
 				dataType: 'json',

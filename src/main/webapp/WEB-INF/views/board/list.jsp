@@ -14,33 +14,6 @@
 </head>
 <body>
 	<div class="container">
-		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<div class="container-fluid">
-				<a class="navbar-brand" href="#">Navbar</a>
-				<button class="navbar-toggler" type="button"
-					data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-					aria-controls="navbarSupportedContent" aria-expanded="false"
-					aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-						<li class="nav-item">
-							<a class="nav-link active"aria-current="page" href="#">Home</a>
-						</li>
-						<li class="nav-item"><a class="nav-link" href="/community">커뮤니티</a></li>
-						<li class="nav-item"><a class="nav-link" href="/notice">공지사항</a></li>
-						<li class="nav-item"><a class="nav-link" href="/faq">자주묻는질문</a></li>
-						<li class="nav-item"><a class="nav-link" href="/inquiry">1:1문의</a></li>
-					</ul>
-					<form class="d-flex">
-						<input class="form-control me-2" type="search"
-							placeholder="Search" aria-label="Search">
-						<button class="btn btn-outline-success" type="submit">Search</button>
-					</form>
-				</div>
-			</div>
-		</nav>
 		<form id="form" method="get" action="/list">
 			<div class="row mb-3">
 				<label for="keyword" class="col-sm-2 col-form-label">검색어</label>
@@ -64,7 +37,7 @@
 				<c:forEach var="board" items="${boardList}" varStatus="status">
 				<tr>
 					<th scope="row">${status.count}</th>
-					<td><a href="/board/${board.boardSeq}">${board.title}</a></td>
+					<td><a href="/${menuType}/${board.boardSeq}">${board.title}</a></td>
 					<td>${board.viewCount}</td>
 					<td><fmt:formatDate value="${board.regDate}" pattern="yyyy.MM.dd HH:mm"/></td>
 				</tr>
@@ -77,7 +50,7 @@
 			</tbody>
 		</table>
 		<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-			<a href="/board/form" class="btn btn-primary" type="button">등록</a>
+			<a href="/${menuType}/form" class="btn btn-primary" type="button">등록</a>
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
@@ -87,7 +60,7 @@
 		var $form = $('#form');
 		$form.bind('submit', function() {
 			$.ajax({
-				url: '/board/save',
+				url: '/${menuType}/save',
 				type: 'post',
 				data: $form.serialize(),
 				dataType: 'json',

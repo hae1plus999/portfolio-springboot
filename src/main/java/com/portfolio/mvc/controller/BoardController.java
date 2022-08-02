@@ -59,12 +59,12 @@ public class BoardController {
 	//@Apiparam은 Swagger에서 제공하는 어노테이션, 파라메터에 대한 주석(설명)이나 옵션을 설정
 	@GetMapping("{menuType}")
 	public String list(@PathVariable MenuType menuType, BoardSearchParameter parameter, MySQLPageRequest pageRequest, Model model) {
-
+		logger.info("menuType : {}", menuType);
 		logger.info("pageRequest : {}", pageRequest);
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
 		List<Board> boardList = boardService.getList(pageRequestParameter);
 		model.addAttribute("boardList", boardList);
-		
+		model.addAttribute("menuType", menuType);
 		return "/board/list";
 	}
 	
@@ -86,14 +86,15 @@ public class BoardController {
 	 * @param boardSeq
 	 * @return
 	 */
-	@GetMapping("/detail/{boardSeq}")
-	public String detail(@PathVariable int boardSeq, Model model) {
+	@GetMapping("/{menuType}/{boardSeq}")
+	public String detail(@PathVariable MenuType menuType, @PathVariable int boardSeq, Model model) {
 		Board board = boardService.get(boardSeq);
 		//null 처리
 		if(board == null) {
 			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
 		}
 		model.addAttribute("board", board);
+		model.addAttribute("menuType", menuType);
 		return "/board/detail";
 	}
 	
@@ -117,10 +118,12 @@ public class BoardController {
 	 * @param parameter
 	 * @param model
 	 */
-	@GetMapping("/form")
+	@GetMapping("/{menuType}/form")
 	@RequestConfig(loginCheck = false)
-	public void form(BoardParameter parameter, Model model) {
+	public String form(@PathVariable MenuType menuType, BoardParameter parameter, Model model) {
 		model.addAttribute("parameter", parameter);
+		model.addAttribute("menuType", menuType);
+		return "/board/form";
 	}
 	
 	/**
@@ -128,9 +131,9 @@ public class BoardController {
 	 * @param parameter
 	 * @param model
 	 */
-	@GetMapping("/edit/{boardSeq}")
+	@GetMapping("/{menuType}/edit/{boardSeq}")
 	@RequestConfig(loginCheck = false)
-	public String edit(@PathVariable(required = true) int boardSeq, BoardParameter parameter, Model model) {
+	public String edit(@PathVariable MenuType menuType, @PathVariable(required = true) int boardSeq, BoardParameter parameter, Model model) {
 		
 		Board board = boardService.get(parameter.getBoardSeq());
 		//null 처리
@@ -139,6 +142,7 @@ public class BoardController {
 		}
 		model.addAttribute("board", board);
 		model.addAttribute("parameter", parameter);
+		model.addAttribute("menuType", menuType);
 		return "board/form";
 	}
 	
@@ -146,7 +150,7 @@ public class BoardController {
 	 * 등록/수정 처리.
 	 * @param board
 	 */
-	@PostMapping("/save")
+	@PostMapping("/{menuType}/save")
 	@RequestConfig(loginCheck = false)
 	@ResponseBody
 	@ApiOperation(value = "등록/수정 처리", notes = "신규 게시물 저장 및 기존 게시물 업데이트가 가능합니다.")
