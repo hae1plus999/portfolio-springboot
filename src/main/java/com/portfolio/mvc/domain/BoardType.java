@@ -15,7 +15,7 @@ public enum BoardType implements BaseCodeLabelEnum {
 
 	private String code;
 	private String label;
-
+	
 	BoardType(String label) {
 		this.code = name();
 		this.label = label;

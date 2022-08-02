@@ -1,10 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<link 
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" 
+	rel="stylesheet" 
+	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" 
+	crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 <sitemesh:write property="head" />
 </head>
 <body>
@@ -21,10 +28,9 @@
 				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 					<li class="nav-item"><a class="nav-link active"
 						aria-current="page" href="#">Home</a></li>
-					<li class="nav-item"><a class="nav-link" href="/community">커뮤니티</a></li>
-					<li class="nav-item"><a class="nav-link" href="/notice">공지사항</a></li>
-					<li class="nav-item"><a class="nav-link" href="/faq">자주묻는질문</a></li>
-					<li class="nav-item"><a class="nav-link" href="/inquiry">1:1문의</a></li>
+					<c:forEach var="menu" items="${menuTypes}">
+					<li class="nav-item"><a class="nav-link ${menu == menuType ? 'active' : '' }" href="${menu.url()}">${menu.menuCode()}</a></li>
+					</c:forEach>
 				</ul>
 				<form class="d-flex">
 					<input class="form-control me-2" type="search" placeholder="Search"

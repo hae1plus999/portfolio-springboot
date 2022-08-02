@@ -12,6 +12,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.portfolio.configuration.exception.BaseException;
 import com.portfolio.configuration.framework.web.bind.annotation.RequestConfig;
 import com.portfolio.configuration.http.BaseResponseCode;
+import com.portfolio.mvc.domain.MenuType;
 
 public class BaseHandlerInterceptor extends HandlerInterceptorAdapter{
 	
@@ -40,6 +41,12 @@ public class BaseHandlerInterceptor extends HandlerInterceptorAdapter{
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
+		
+		if(handler instanceof HandlerMethod) {
+			if(modelAndView != null) {
+				modelAndView.addObject("menuTypes", MenuType.values());
+			}
+		}
 		logger.info("postHandle requestURI : {}", request.getRequestURI());
 	}
 }

@@ -57,10 +57,14 @@ public class BoardController {
 	 * @return
 	 */
 	//@Apiparam은 Swagger에서 제공하는 어노테이션, 파라메터에 대한 주석(설명)이나 옵션을 설정
-	@GetMapping("{menuType}")
+	@GetMapping("/{menuType}")
 	public String list(@PathVariable MenuType menuType, BoardSearchParameter parameter, MySQLPageRequest pageRequest, Model model) {
 		logger.info("menuType : {}", menuType);
 		logger.info("pageRequest : {}", pageRequest);
+		logger.info("menuType.boardType() : {}", menuType.boardType());
+		
+		parameter.setBoardType(menuType.boardType());
+		logger.info("parameter.getBoardType() : {}", parameter.getBoardType());
 		PageRequestParameter<BoardSearchParameter> pageRequestParameter = new PageRequestParameter<BoardSearchParameter>(pageRequest, parameter);
 		List<Board> boardList = boardService.getList(pageRequestParameter);
 		model.addAttribute("boardList", boardList);
@@ -160,7 +164,7 @@ public class BoardController {
 		@ApiImplicitParam(name = "title", value = "제목", example = "spring"),
 		@ApiImplicitParam(name = "contents", value = "내용", example = "spring 강좌")
 	})
-	public BaseResponse<Integer> save(BoardParameter parameter) {
+	public BaseResponse<Integer> save(@PathVariable MenuType menuType, BoardParameter parameter) {
 		//제목 필수 체크 
 		if(StringUtils.isEmpty(parameter.getTitle())) {
 			throw new BaseException(BaseResponseCode.VALIDATE_REQUIRED, new String[] { "title", "제목" });
@@ -169,6 +173,7 @@ public class BoardController {
 		if(StringUtils.isEmpty(parameter.getContents())) {
 			throw new BaseException(BaseResponseCode.VALIDATE_REQUIRED, new String[] { "contents", "내용" });
 		}
+		parameter.setBoardType(menuType.boardType());
 		boardService.save(parameter);
 		return new BaseResponse<Integer>(parameter.getBoardSeq());
 	}
