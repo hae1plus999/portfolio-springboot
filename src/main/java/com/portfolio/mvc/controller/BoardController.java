@@ -79,39 +79,64 @@ public class BoardController {
 //	}
 	
 	/**
-	 * 상세 정보 리턴. 
+	 * 상세 정보 화면
 	 * @param boardSeq
 	 * @return
 	 */
 	@GetMapping("/{boardSeq}")
-	@ResponseBody
-	@ApiOperation(value = "상세 조회", notes = "게시물 번호에 해당하는 상세 정보를 조회할 수 있습니다.")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1")
-	})
-	public BaseResponse<Board> get(@PathVariable int boardSeq) {
+	public String detail(@PathVariable int boardSeq, Model model) {
 		Board board = boardService.get(boardSeq);
 		//null 처리
 		if(board == null) {
 			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
 		}
-		return new BaseResponse<Board>(board);
+		model.addAttribute("board", board);
+		return "/board/detail";
 	}
 	
+//	@GetMapping("/{boardSeq}")
+//	@ResponseBody
+//	@ApiOperation(value = "상세 조회", notes = "게시물 번호에 해당하는 상세 정보를 조회할 수 있습니다.")
+//	@ApiImplicitParams({
+//		@ApiImplicitParam(name = "boardSeq", value = "게시물 번호", example = "1")
+//	})
+//	public BaseResponse<Board> get(@PathVariable int boardSeq) {
+//		Board board = boardService.get(boardSeq);
+//		//null 처리
+//		if(board == null) {
+//			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
+//		}
+//		return new BaseResponse<Board>(board);
+//	}
+	
 	/**
-	 * 등록/수정 화면
+	 * 등록 화면
 	 * @param parameter
 	 * @param model
 	 */
 	@GetMapping("/form")
 	@RequestConfig(loginCheck = false)
 	public void form(BoardParameter parameter, Model model) {
-		if(parameter.getBoardSeq() > 0) {
-			Board board = boardService.get(parameter.getBoardSeq());
-			model.addAttribute("board", board);
-
-		}
 		model.addAttribute("parameter", parameter);
+	}
+	
+	/**
+	 * 수정 화면
+	 * @param parameter
+	 * @param model
+	 */
+	@GetMapping("/edit/{boardSeq}")
+	@RequestConfig(loginCheck = false)
+	public String edit(@PathVariable(required = true) int boardSeq, BoardParameter parameter, Model model) {
+		
+		Board board = boardService.get(parameter.getBoardSeq());
+		//null 처리
+		if(board == null) {
+			throw new BaseException(BaseResponseCode.DATA_IS_NULL, new String[] { "게시물" });
+		}
+		model.addAttribute("board", board);
+		model.addAttribute("parameter", parameter);
+		return "board/form";
 	}
 	
 	/**
@@ -197,7 +222,7 @@ public class BoardController {
 	 * 삭제 처리.
 	 * @param boardSeq
 	 */
-	@DeleteMapping("/{boardSeq}")
+	@DeleteMapping("/delete/{boardSeq}")
 	@RequestConfig
 	@ApiOperation(value = "삭제 처리", notes = "게시물 번호에 해당하는 정보를 삭제합니다.")
 	@ApiImplicitParams({

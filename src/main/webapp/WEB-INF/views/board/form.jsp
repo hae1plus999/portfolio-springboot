@@ -13,20 +13,21 @@
 <body>
 	<div class="container">
 	<form id="form" method="post" action="/save">
+		<input type="hidden" name="boardSeq" value="${board == null ? 0 : board.boardSeq}"/>
 		<input type="hidden" name="boardType" value="COMMUNITY"/>
-	  <div class="row mb-3">
-	    <label for="title" class="col-sm-2 col-form-label">제목</label>
-	    <div class="col-sm-10">
-	      <input type="text" class="form-control" name="title" value="${board.title}" id="title">
-	    </div>
-	  </div>
-	  <div class="row mb-3">
-	    <label for="contents" class="col-sm-2 col-form-label">내용</label>
-	    <div class="col-sm-10">
-	      <textarea class="form-control" name="contents" id="contents">${board.contents}</textarea>
-	    </div>
-	  </div>
-	  <button type="submit" class="btn btn-primary">저장하기</button>
+		  <div class="row mb-3">
+		    <label for="title" class="col-sm-2 col-form-label">제목</label>
+		    <div class="col-sm-10">
+		      <input type="text" class="form-control" name="title" value="${board.title}" id="title">
+		    </div>
+		  </div>
+		  <div class="row mb-3">
+		    <label for="contents" class="col-sm-2 col-form-label">내용</label>
+		    <div class="col-sm-10">
+		      <textarea class="form-control" name="contents" id="contents">${board.contents}</textarea>
+		    </div>
+		  </div>
+	  	  <button type="submit" class="btn btn-primary">저장하기</button>
 	</form>
 	</div>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
@@ -42,7 +43,7 @@
 				dataType: 'json',
 				success: function(data) {
 					if (data.code == 'SUCCESS'){
-						
+						/* alert(저장되었습니다.); */
 					}else{
 						alert(data.message);
 					}

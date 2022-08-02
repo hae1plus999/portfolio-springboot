@@ -14,43 +14,22 @@
 </head>
 <body>
 	<div class="container">
-		<form id="form" method="get" action="/list">
-			<div class="row mb-3">
-				<label for="keyword" class="col-sm-2 col-form-label">검색어</label>
-				<div class="col-sm-10">
-					<input type="text" class="form-control" name="keyword"
-						value="${parameter.keyword}" id="keyword">
-				</div>
+		<div class="card">
+			<div class="card-header">
+			${board.title}
 			</div>
-			<button type="submit" class="btn btn-primary">검색하기</button>
-		</form>
-		<table class="table">
-			<thead>
-				<tr>
-					<th scope="col">순서</th>
-					<th scope="col">제목</th>
-					<th scope="col">조회수</th>
-					<th scope="col">등록일자</th>
-				</tr>
-			</thead>
-			<tbody>
-				<c:forEach var="board" items="${boardList}" varStatus="status">
-				<tr>
-					<th scope="row">${status.count}</th>
-					<td><a href="/board/${board.boardSeq}">${board.title}</a></td>
-					<td>${board.viewCount}</td>
-					<td><fmt:formatDate value="${board.regDate}" pattern="yyyy.MM.dd HH:mm"/></td>
-				</tr>
-				</c:forEach>
-				<c:if test="${fn:length(boardList) == 0}">
-				<tr>
-					<td colspan="4"></td>
-				</tr>
-				</c:if>
-			</tbody>
-		</table>
+			<div class="card-body">
+				<blockquote class="blockquote mb-0">
+					<p>${board.contents}</p>
+					<footer class="blockquote-footer">
+						<fmt:formatDate value="${board.regDate}" pattern="yyyy.MM.dd HH:mm"/></cite>
+					</footer>
+				</blockquote>
+			</div>
+		</div>
 		<div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
-			<a href="/board/form" class="btn btn-primary" type="button">등록</a>
+			<a href="/board/list" class="btn btn-primary me-md-2" type="button">목록</a>
+			<a href="/board/edit/${board.boardSeq}" class="btn btn-primary" type="button">수정</a>
 		</div>
 	</div>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
